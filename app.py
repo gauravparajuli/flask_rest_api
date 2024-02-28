@@ -35,6 +35,19 @@ def store():
 
     return new_store, 201
 
+@app.route('/store/<string:name>/item', methods=['POST'])
+def store_item(name):
+    request_data = request.get_json()
+    for store in stores:
+        if store['name'] == name:
+            new_item = {
+                'name': request_data['name'],
+                'price': request_data['price']
+            }
+
+            return new_item
+        
+    return {'error': 'store not found'}, 404
 
 if __name__ == '__main__':
     app.run(debug=True)
