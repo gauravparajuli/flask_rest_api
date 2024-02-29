@@ -66,7 +66,16 @@ def create_item():
 
 @app.get('/item')
 def get_all_items():
+    print(items)
     return {'items': list(items.values())}
+
+@app.delete('/item/<string:item_id>')
+def delete_item(item_id):
+    try:
+        del items[item_id]
+        return {'message': 'deleted'}, 204
+    except KeyError:
+        return {'message': 'item not found'}, 404
 
 @app.get('/item/<string:item_id>')
 def get_item(item_id):
@@ -75,6 +84,35 @@ def get_item(item_id):
     except KeyError:
         # abort(404, message='item not found')
         return {'message': 'item not found'}, 404
+    
+@app.put('/item/<string:item_id>')
+def update_item(item_id):
+    item_data = request.get_json()
+
+    if (
+        'price' not in item_data
+        or 'name' not in item_data
+    ):
+        return {
+            'mesage': "'price' and 'name' must be included in json payload"
+        }, 400
+    try:
+        item = items[item_id]
+        item |= item_data
+
+        return item
+    
+    except KeyError:
+        # abort(404, message='item not found')
+        return {'message': 'item not found'}, 404
+    
+@app.delete('/store/<string:store_id>')
+def delete_store(store_id):
+    try:
+        del stores[store_id]
+        return {}, 204
+    except KeyError:
+        return dict(message='store not found'), 404
 
 if __name__ == '__main__':
     app.run(debug=True)
