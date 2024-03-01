@@ -12,10 +12,12 @@ blp = Blueprint('Store Items', __name__, description='Operation on store item')
 @blp.route('/item')
 class StoreItemList(MethodView):
 
+    @blp.response(200, ItemSchema(many=True))
     def get(self):
-        return {'items': list(items.values())}
+        return items.values()
 
     @blp.arguments(ItemSchema)
+    @blp.response(201, ItemSchema)
     def post(self, item_data):
         # item_data = request.get_json()
 

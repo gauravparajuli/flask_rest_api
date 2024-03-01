@@ -87,42 +87,42 @@ def index():
 #     print(items)
 #     return {'items': list(items.values())}
 
-@app.delete('/item/<string:item_id>')
-def delete_item(item_id):
-    try:
-        del items[item_id]
-        return {'message': 'deleted'}, 204
-    except KeyError:
-        return {'message': 'item not found'}, 404
+# @app.delete('/item/<string:item_id>')
+# def delete_item(item_id):
+#     try:
+#         del items[item_id]
+#         return {'message': 'deleted'}, 204
+#     except KeyError:
+#         return {'message': 'item not found'}, 404
 
-@app.get('/item/<string:item_id>')
-def get_item(item_id):
-    try:
-        return items[item_id]
-    except KeyError:
-        # abort(404, message='item not found')
-        return {'message': 'item not found'}, 404
+# @app.get('/item/<string:item_id>')
+# def get_item(item_id):
+#     try:
+#         return items[item_id]
+#     except KeyError:
+#         # abort(404, message='item not found')
+#         return {'message': 'item not found'}, 404
     
-@app.put('/item/<string:item_id>')
-def update_item(item_id):
-    item_data = request.get_json()
+# @app.put('/item/<string:item_id>')
+# def update_item(item_id):
+#     item_data = request.get_json()
 
-    if (
-        'price' not in item_data
-        or 'name' not in item_data
-    ):
-        return {
-            'mesage': "'price' and 'name' must be included in json payload"
-        }, 400
-    try:
-        item = items[item_id]
-        item |= item_data
+#     if (
+#         'price' not in item_data
+#         or 'name' not in item_data
+#     ):
+#         return {
+#             'mesage': "'price' and 'name' must be included in json payload"
+#         }, 400
+#     try:
+#         item = items[item_id]
+#         item |= item_data
 
-        return item
+#         return item
     
-    except KeyError:
-        # abort(404, message='item not found')
-        return {'message': 'item not found'}, 404
+#     except KeyError:
+#         # abort(404, message='item not found')
+#         return {'message': 'item not found'}, 404
     
 # @app.delete('/store/<string:store_id>')
 # def delete_store(store_id):
