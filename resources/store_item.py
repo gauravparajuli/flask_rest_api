@@ -39,6 +39,7 @@ class StoreItemList(MethodView):
     
 @blp.route('/item/<string:item_id>')
 class StoreItem(MethodView):
+    @blp.response(200, ItemSchema)
     def get(self, item_id):
         try:
             return items[item_id]
@@ -46,6 +47,7 @@ class StoreItem(MethodView):
             abort(404, message='item not found')
 
     @blp.arguments(ItemUpdateSchema)
+    @blp.response(200, ItemSchema)
     def put(self, item_data, item_id):
         # item_data = request.get_json()
 
