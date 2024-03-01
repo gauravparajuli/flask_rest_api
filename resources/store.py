@@ -3,6 +3,7 @@ from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from db import stores
+from resources.schemas import StoreSchema
 
 blp = Blueprint('Stores', __name__, description='Operation on stores')
 
@@ -26,13 +27,14 @@ class StoreList(MethodView):
     def get(self):
         return {'stores': list(stores.values())}
     
-    def post(self):
-        store_data = request.get_json()
+    @blp.arguments(StoreSchema)
+    def post(self, store_data):
+        # store_data = request.get_json()
 
-        if (
-            'name' not in store_data
-        ):
-            abort(400, message="'name' should be included in json payload")
+        # if (
+        #     'name' not in store_data
+        # ):
+        #     abort(400, message="'name' should be included in json payload")
 
         for store in stores.values():
             if store_data['name'] == store['name']:
