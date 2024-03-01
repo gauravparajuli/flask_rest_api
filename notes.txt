@@ -1,0 +1,1 @@
+docker run -dp 5000:5000 -w /app -v "/c/Users/Hp/Deskop/store_app:/app" flask_smorest
