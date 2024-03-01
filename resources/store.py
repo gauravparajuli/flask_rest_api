@@ -20,3 +20,26 @@ class Store(MethodView):
             return {}, 204
         except KeyError:
             abort(404, message='store not found')
+
+@blp.route('/store')
+class StoreList(MethodView):
+    def get(self):
+        return {'stores': list(stores.values())}
+    
+    def post(self):
+        store_data = request.get_json()
+
+        if (
+            'name' not in store_data
+        ):
+            abort(400, message="'name' should be included in json payload")
+
+        for store in stores.values():
+            if store_data['name'] == store['name']:
+                abort(400, message='store already exists')
+
+        store_id = uuid.uuid4().hex
+        store = {**store_data, 'id': store_id}
+        stores[store_id] = store
+
+        return store, 201

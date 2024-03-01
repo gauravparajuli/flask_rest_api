@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, request
 from flask_smorest import Api
 from db import stores, items
 import uuid
@@ -34,28 +34,28 @@ def index():
 #         # abort(404, message='store not found')
 #         return {'message': 'store not found'}, 404
     
-@app.get('/store')
-def get_stores():
-    return {'stores': list(stores.values())}
+# @app.get('/store')
+# def get_stores():
+#     return {'stores': list(stores.values())}
 
-@app.post('/store')
-def create_store():
+# @app.post('/store')
+# def create_store():
 
-    store_data = request.get_json()
+#     store_data = request.get_json()
 
-    if 'name' not in store_data:
-        return {'message': "'name' should be included in json payload"}, 400
+#     if 'name' not in store_data:
+#         return {'message': "'name' should be included in json payload"}, 400
     
-    for store in stores.values():
-        if store['name'] == store_data['name']:
-            # abort(400, message=f'store already exits')
-            return {'message': 'store already exists'}, 400
+#     for store in stores.values():
+#         if store['name'] == store_data['name']:
+#             # abort(400, message=f'store already exits')
+#             return {'message': 'store already exists'}, 400
 
-    store_id = uuid.uuid4().hex
-    store = {**store_data, 'id': store_id}
-    stores[store_id] = store
+#     store_id = uuid.uuid4().hex
+#     store = {**store_data, 'id': store_id}
+#     stores[store_id] = store
 
-    return store, 201
+#     return store, 201
 
 @app.post('/item')
 def create_item():
