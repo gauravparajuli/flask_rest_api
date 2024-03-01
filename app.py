@@ -1,9 +1,24 @@
 from flask import Flask, jsonify, request
-from flask_smorest import abort
+from flask_smorest import Api
 from db import stores, items
 import uuid
+from resources.store import blp as StoreBlueprint
 
 app = Flask(__name__)
+
+# we will setup app config
+app.config["PROPAGATE_EXCEPTIONS"] = True
+app.config["API_TITLE"] = "Stores REST API"
+app.config["API_VERSION"] = "v1"
+app.config["OPENAPI_VERSION"] = "3.0.3"
+app.config["OPENAPI_URL_PREFIX"] = "/"
+app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
+app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
+
+api = Api(app)
+
+# register all the blueprints here
+api.register_blueprint(StoreBlueprint)
 
 @app.get('/')
 def index():
@@ -11,13 +26,13 @@ def index():
         'message': 'it works'
     }
 
-@app.get('/store/<string:store_id>')
-def get_store(store_id):
-    try:
-        return stores[store_id]
-    except KeyError:
-        # abort(404, message='store not found')
-        return {'message': 'store not found'}, 404
+# @app.get('/store/<string:store_id>')
+# def get_store(store_id):
+#     try:
+#         return stores[store_id]
+#     except KeyError:
+#         # abort(404, message='store not found')
+#         return {'message': 'store not found'}, 404
     
 @app.get('/store')
 def get_stores():
@@ -106,13 +121,13 @@ def update_item(item_id):
         # abort(404, message='item not found')
         return {'message': 'item not found'}, 404
     
-@app.delete('/store/<string:store_id>')
-def delete_store(store_id):
-    try:
-        del stores[store_id]
-        return {}, 204
-    except KeyError:
-        return dict(message='store not found'), 404
+# @app.delete('/store/<string:store_id>')
+# def delete_store(store_id):
+#     try:
+#         del stores[store_id]
+#         return {}, 204
+#     except KeyError:
+#         return dict(message='store not found'), 404
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# if __name__ == '__main__':
+#     app.run(debug=True)
