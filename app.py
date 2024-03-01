@@ -2,7 +2,9 @@ from flask import Flask, request
 from flask_smorest import Api
 from db import stores, items
 import uuid
+
 from resources.store import blp as StoreBlueprint
+from resources.store_item import blp as StoreItemBlueprint
 
 app = Flask(__name__)
 
@@ -19,6 +21,7 @@ api = Api(app)
 
 # register all the blueprints here
 api.register_blueprint(StoreBlueprint)
+api.register_blueprint(StoreItemBlueprint)
 
 @app.get('/')
 def index():
@@ -57,32 +60,32 @@ def index():
 
 #     return store, 201
 
-@app.post('/item')
-def create_item():
+# @app.post('/item')
+# def create_item():
 
-    item_data = request.get_json()
+#     item_data = request.get_json()
 
-    if (
-        'price' not in item_data
-        or 'store_id' not in item_data
-        or 'name' not in item_data
-    ):
-        return {'message': 'price, store_id and name should be included'}, 400
+#     if (
+#         'price' not in item_data
+#         or 'store_id' not in item_data
+#         or 'name' not in item_data
+#     ):
+#         return {'message': 'price, store_id and name should be included'}, 400
 
-    if item_data['store_id'] not in stores:
-        # abort(404, message='store not found')
-        return {'message': 'store not found'}, 404
+#     if item_data['store_id'] not in stores:
+#         # abort(404, message='store not found')
+#         return {'message': 'store not found'}, 404
     
-    item_id = uuid.uuid4().hex
-    item = {**item_data, 'id': item_id}
-    items[item_id] = item
+#     item_id = uuid.uuid4().hex
+#     item = {**item_data, 'id': item_id}
+#     items[item_id] = item
     
-    return item, 201
+#     return item, 201
 
-@app.get('/item')
-def get_all_items():
-    print(items)
-    return {'items': list(items.values())}
+# @app.get('/item')
+# def get_all_items():
+#     print(items)
+#     return {'items': list(items.values())}
 
 @app.delete('/item/<string:item_id>')
 def delete_item(item_id):
