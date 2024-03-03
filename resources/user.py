@@ -5,7 +5,7 @@ from flask_jwt_extended import create_access_token
 
 from db import db
 from models import UserModel
-from schemas import UserSchema
+from resources.schemas import UserSchema
 
 blp = Blueprint('Users', __name__, description='Operations on users')
 
@@ -38,13 +38,14 @@ class UserRegister(MethodView):
         db.session.add(user)
         db.session.commit()
 
-        return dict(message='user created successfully')
+        return dict(message='user created successfully'), 201
     
 
 # for development purpose only
 @blp.route('/user/<int:user_id>')
 class User(MethodView):
 
+    @blp.response(200, UserSchema)
     def get(self, user_id):
         user = UserModel.query.get_or_404(user_id)
         return user

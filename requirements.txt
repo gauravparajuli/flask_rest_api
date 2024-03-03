@@ -14,6 +14,7 @@ jinja_partials==0.2.0
 MarkupSafe==2.1.5
 marshmallow==3.21.0
 packaging==23.2
+passlib==1.7.4
 PyJWT==2.8.0
 python-dotenv==1.0.1
 sgmllib3k==1.0.0

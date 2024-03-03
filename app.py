@@ -40,7 +40,7 @@ def create_app(db_url:str=None):
     api.register_blueprint(StoreBlueprint)
     api.register_blueprint(StoreItemBlueprint)
     api.register_blueprint(TagBluePrint)
-    app.register_blueprint(UserBluePrint)
+    api.register_blueprint(UserBluePrint)
 
     return app
 
