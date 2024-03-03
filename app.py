@@ -28,6 +28,10 @@ def create_app(db_url:str=None):
 
     jwt = JWTManager(app)
 
+    @jwt.needs_fresh_token_loader
+    def token_not_fresh_callback(jwt_header, jwt_payload):
+        return dict(message='this token is not fresh', error='fresh token required'), 401
+
     @jwt.token_in_blocklist_loader
     def check_if_token_in_blocklist(jwt_header, jwt_payload):
         return jwt_payload['jti'] in models.BLOCKLIST
