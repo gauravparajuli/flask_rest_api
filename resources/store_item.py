@@ -46,14 +46,19 @@ class StoreItem(MethodView):
         if item:
             item.price = item_data['price']
             item.name = item_data['name']
-        else:
-            item = ItemModel(id=item_id, **item_data)
-
-        db.session.add(item)
-        db.session.commit()
+        
+            db.session.add(item)
+            db.session.commit()
 
         return item
 
     def delete(self, item_id):
-        item = ItemModel.query.get_or_404(item_id)
-        raise NotImplementedError('Updating an item is not implemented')
+        item = ItemModel.query.get(item_id)
+        
+        if item:
+            db.session.delete(item)
+            db.session.commit()
+            
+            return {}, 204
+        
+        return abort(404, message='store item not found')

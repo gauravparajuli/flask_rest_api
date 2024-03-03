@@ -16,8 +16,14 @@ class Store(MethodView):
         return store
 
     def delete(self, store_id):
-        store = StoreModel.query.get_or_404(store_id)
-        raise NotImplementedError('deleting a store has not been implemented')
+        store = StoreModel.query.get(store_id)
+        if store:
+            db.session.delete(store)
+            db.session.commit()
+
+            return {}, 204
+
+        abort(404, message='store not found')
 
 @blp.route('/store')
 class StoreList(MethodView):
