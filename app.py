@@ -1,8 +1,8 @@
 from flask import Flask, request
 from flask_smorest import Api
+from flask_jwt_extended import JWTManager
 from db import db
 import os
-import models
 
 from resources.store import blp as StoreBlueprint
 from resources.store_item import blp as StoreItemBlueprint
@@ -22,11 +22,17 @@ def create_app(db_url:str=None):
 
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url or os.getenv('DATABASE_URI', 'sqlite:///data.db')
     app.config['SQLALCHEMY_TRACK_NOTIFICATIONS'] = False
+    app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'keygoeshere')
+
+    jwt = JWTManager(app)
+
     db.init_app(app)
     
     api = Api(app)
 
     with app.app_context():
+        import models
+
         db.create_all()
 
     # register all the blueprints here
