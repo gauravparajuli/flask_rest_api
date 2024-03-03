@@ -1,33 +1,44 @@
 from flask import Flask, request
 from flask_smorest import Api
-from db import stores, items
-import uuid
+from db import db
+import os
+import models # let sqlalchemy know which models exists in our database
 
 from resources.store import blp as StoreBlueprint
 from resources.store_item import blp as StoreItemBlueprint
 
-app = Flask(__name__)
+def create_app(db_url:str=None):
+    app = Flask(__name__)
 
-# we will setup app config
-app.config["PROPAGATE_EXCEPTIONS"] = True
-app.config["API_TITLE"] = "Stores REST API"
-app.config["API_VERSION"] = "v1"
-app.config["OPENAPI_VERSION"] = "3.0.3"
-app.config["OPENAPI_URL_PREFIX"] = "/"
-app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
-app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
+    # we will setup app config
+    app.config["PROPAGATE_EXCEPTIONS"] = True
+    app.config["API_TITLE"] = "Stores REST API"
+    app.config["API_VERSION"] = "v1"
+    app.config["OPENAPI_VERSION"] = "3.0.3"
+    app.config["OPENAPI_URL_PREFIX"] = "/"
+    app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
+    app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
 
-api = Api(app)
+    app.config['SQL_ALCHEMY_DATABASE_URI'] = db_url or os.getenv('DATABASE_URI', 'sqlite:///data.db')
+    app.config['SQLALCHEMY_TRACK_NOTIFICATIONS'] = False
+    db.init_app(app)
+    
+    api = Api(app)
 
-# register all the blueprints here
-api.register_blueprint(StoreBlueprint)
-api.register_blueprint(StoreItemBlueprint)
+    with app.app_context():
+        db.create_all()
 
-@app.get('/')
-def index():
-    return {
-        'message': 'it works'
-    }
+    # register all the blueprints here
+    api.register_blueprint(StoreBlueprint)
+    api.register_blueprint(StoreItemBlueprint)
+
+    return app
+
+# @app.get('/')
+# def index():
+#     return {
+#         'message': 'it works'
+#     }
 
 # @app.get('/store/<string:store_id>')
 # def get_store(store_id):
