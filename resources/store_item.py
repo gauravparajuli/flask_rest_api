@@ -15,7 +15,7 @@ class StoreItemList(MethodView):
 
     @blp.response(200, ItemSchema(many=True))
     def get(self):
-        return items.values()
+        return ItemModel.query.all()
 
     @blp.arguments(ItemSchema)
     @blp.response(201, ItemSchema)
@@ -46,4 +46,4 @@ class StoreItem(MethodView):
 
     def delete(self, item_id):
         item = ItemModel.query.get_or_404(item_id)
-        raise NotImplementedError('Deleting an item is not implemented')
+        raise NotImplementedError('Updating an item is not implemented')
