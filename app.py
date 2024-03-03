@@ -19,7 +19,7 @@ def create_app(db_url:str=None):
     app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
     app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
 
-    app.config['SQL_ALCHEMY_DATABASE_URI'] = db_url or os.getenv('DATABASE_URI', 'sqlite:///data.db')
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_url or os.getenv('DATABASE_URI', 'sqlite:///data.db')
     app.config['SQLALCHEMY_TRACK_NOTIFICATIONS'] = False
     db.init_app(app)
     
