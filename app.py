@@ -7,6 +7,7 @@ import os
 from resources.store import blp as StoreBlueprint
 from resources.store_item import blp as StoreItemBlueprint
 from resources.tag import blp as TagBluePrint
+from resources.user import blp as UserBluePrint
 
 def create_app(db_url:str=None):
     app = Flask(__name__)
@@ -39,6 +40,7 @@ def create_app(db_url:str=None):
     api.register_blueprint(StoreBlueprint)
     api.register_blueprint(StoreItemBlueprint)
     api.register_blueprint(TagBluePrint)
+    app.register_blueprint(UserBluePrint)
 
     return app
 
