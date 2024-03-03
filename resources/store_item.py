@@ -1,5 +1,6 @@
 from flask.views import MethodView
 from flask_smorest import abort, Blueprint
+from flask_jwt_extended import jwt_required
 from sqlalchemy.exc import SQLAlchemyError
 from models import ItemModel
 from db import db
@@ -13,10 +14,12 @@ blp = Blueprint('Store Items', __name__, description='Operation on store item')
 @blp.route('/item')
 class StoreItemList(MethodView):
 
+    @jwt_required()
     @blp.response(200, ItemSchema(many=True))
     def get(self):
         return ItemModel.query.all()
 
+    @jwt_required()
     @blp.arguments(ItemSchema)
     @blp.response(201, ItemSchema)
     def post(self, item_data):
@@ -33,6 +36,7 @@ class StoreItemList(MethodView):
     
 @blp.route('/item/<string:item_id>')
 class StoreItem(MethodView):
+    @jwt_required()
     @blp.response(200, ItemSchema)
     def get(self, item_id):
         item = ItemModel.query.get_or_404(item_id)
@@ -52,6 +56,7 @@ class StoreItem(MethodView):
 
         return item
 
+    @jwt_required()
     def delete(self, item_id):
         item = ItemModel.query.get(item_id)
         
