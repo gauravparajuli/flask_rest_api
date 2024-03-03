@@ -3,6 +3,7 @@ from flask_smorest import Api
 from flask_jwt_extended import JWTManager
 from db import db
 import os
+import models
 
 from resources.store import blp as StoreBlueprint
 from resources.store_item import blp as StoreItemBlueprint
@@ -26,6 +27,10 @@ def create_app(db_url:str=None):
     app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'keygoeshere')
 
     jwt = JWTManager(app)
+
+    @jwt.token_in_blocklist_loader
+    def check_if_token_in_blocklist(jwt_header, jwt_payload):
+        return jwt_payload['jti'] in models.BLOCKLIST
 
     @jwt.additional_claims_loader
     def add_claims_to_jwt(identity):
@@ -51,7 +56,6 @@ def create_app(db_url:str=None):
     api = Api(app)
 
     with app.app_context():
-        import models
 
         db.create_all()
 

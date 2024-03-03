@@ -1,10 +1,10 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from passlib.hash import pbkdf2_sha256
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, get_jwt, jwt_required
 
 from db import db
-from models import UserModel
+from models import UserModel, BLOCKLIST
 from resources.schemas import UserSchema
 
 blp = Blueprint('Users', __name__, description='Operations on users')
@@ -57,3 +57,10 @@ class User(MethodView):
 
         return {}, 204
     
+@blp.route('/logout')
+class UserLogout(MethodView):
+    @jwt_required()
+    def post(self):
+        jwt = get_jwt()['jti']
+        BLOCKLIST.add(jwt)
+        return dict(message='logged out successfully')
