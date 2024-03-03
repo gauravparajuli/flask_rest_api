@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask_smorest import Api
 from flask_jwt_extended import JWTManager
+from flask_migrate import Migrate
 from db import db
 import os
 import models
@@ -57,11 +58,13 @@ def create_app(db_url:str=None):
 
     db.init_app(app)
     
+    migrate = Migrate(app, db)
+
     api = Api(app)
 
-    with app.app_context():
-
-        db.create_all()
+    # # since we will be using flask-migrate, we donot need to tell flask-sqlachemy to create tables
+    # with app.app_context():
+    #     db.create_all()
 
     # register all the blueprints here
     api.register_blueprint(StoreBlueprint)
