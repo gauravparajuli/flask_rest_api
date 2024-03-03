@@ -9,4 +9,4 @@ class ItemModel(db.Model):
     # store_id = db.Column(db.Integer, unique=False, nullable=False)
 
     store_id = db.Column(db.Integer, db.ForeignKey('stores.id'), unique=False, nullable=False)
-    store = db.relationship('StoreModel', back_populates=True)
+    store = db.relationship('StoreModel', back_populates='items')

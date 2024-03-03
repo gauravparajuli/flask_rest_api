@@ -2,10 +2,13 @@ from flask import Flask, request
 from flask_smorest import Api
 from db import db
 import os
-import models # let sqlalchemy know which models exists in our database
+from models import StoreModel, ItemModel
 
 from resources.store import blp as StoreBlueprint
 from resources.store_item import blp as StoreItemBlueprint
+
+print(StoreModel)
+print(ItemModel)
 
 def create_app(db_url:str=None):
     app = Flask(__name__)

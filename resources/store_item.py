@@ -1,7 +1,8 @@
-import uuid
-from flask import request
 from flask.views import MethodView
 from flask_smorest import abort, Blueprint
+from sqlalchemy.exc import SQLAlchemyError
+from models import ItemModel
+from db import db
 
 from resources.schemas import ItemSchema, ItemUpdateSchema
 
@@ -19,23 +20,14 @@ class StoreItemList(MethodView):
     @blp.arguments(ItemSchema)
     @blp.response(201, ItemSchema)
     def post(self, item_data):
-        # item_data = request.get_json()
 
-        # if (
-        #     'price' not in item_data
-        #     or 'store_id' not in item_data
-        #     or 'name' not in item_data
-        # ):
-        #     abort(400, message="'name', 'price' and 'store_id' must be included in json payload")
+        item = ItemModel(**item_data)
 
-        # check if the given item already exists
-        for item in items.values():
-            if item_data['name'] == item['name'] and item_data['store_id'] == item['store_id']:
-                abort(400, message=f'item already exists')
-
-        item_id = uuid.uuid4().hex
-        item = {**item_data, 'id': item_id}
-        items[item_id] = item
+        try:
+            db.session.add(item)
+            db.session.commit()
+        except SQLAlchemyError:
+            abort(500, message='Error occured while inserting item')
 
         return item
     
