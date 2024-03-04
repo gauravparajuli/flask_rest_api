@@ -1,5 +1,6 @@
 alembic==1.13.1
 apispec==6.5.0
+async-timeout==4.0.3
 blinker==1.7.0
 click==8.1.7
 colorama==0.4.6
@@ -20,6 +21,8 @@ packaging==23.2
 passlib==1.7.4
 PyJWT==2.8.0
 python-dotenv==1.0.1
+redis==5.0.2
+rq==1.16.0
 sgmllib3k==1.0.0
 SQLAlchemy==2.0.27
 typing_extensions==4.10.0

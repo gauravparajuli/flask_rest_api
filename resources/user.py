@@ -7,6 +7,17 @@ from db import db
 from models import UserModel, BLOCKLIST
 from resources.schemas import UserSchema
 
+##################################################################
+import os
+import redis
+from rq import Queue
+from tasks import send_message
+
+# connect to redis
+connection = redis.from_url(os.getenv('REDIS_URL'))
+queue = Queue('emails', connection=connection)
+##################################################################
+
 blp = Blueprint('Users', __name__, description='Operations on users')
 
 @blp.route('/login')
@@ -38,6 +49,9 @@ class UserRegister(MethodView):
 
         db.session.add(user)
         db.session.commit()
+
+        # simulate sending mail to the user
+        queue.enqueue(send_message, user.username)
 
         return dict(message='user created successfully'), 201
     
